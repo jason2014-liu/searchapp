@@ -30,6 +30,13 @@ public class SearchTaskEntResult implements Serializable {
 	private String relId;
 
 	private String website;
+	
+	private String taskId;
+	private String entyId;
+	private String entyType;
+	private String summary;
+	
+	
 
 	public SearchTaskEntResult() {
 	}
@@ -73,4 +80,38 @@ public class SearchTaskEntResult implements Serializable {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public String getEntyId() {
+		return entyId;
+	}
+
+	public void setEntyId(String entyId) {
+		this.entyId = entyId;
+	}
+
+	public String getEntyType() {
+		return entyType;
+	}
+
+	public void setEntyType(String entyType) {
+		this.entyType = entyType;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+	
+	
 }

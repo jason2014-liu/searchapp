@@ -22,6 +22,11 @@ public class SearchTask implements Serializable {
 	private String status;
 
 	private String taskName;
+	
+	private String taskType;
+	
+	private String keywords;
+	
 
 	public SearchTask() {
 	}
@@ -74,4 +79,22 @@ public class SearchTask implements Serializable {
 		this.taskName = taskName;
 	}
 
+	public String getTaskType() {
+		return taskType;
+	}
+
+	public void setTaskType(String taskType) {
+		this.taskType = taskType;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	
+	
 }

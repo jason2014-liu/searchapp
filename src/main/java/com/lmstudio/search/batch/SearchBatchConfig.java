@@ -60,9 +60,9 @@ public class SearchBatchConfig {
 		SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
 		queryProvider.setDatabaseType(DatabaseType.ORACLE.getProductName());
 		queryProvider.setDataSource(dataSource);
-		queryProvider.setSelectClause("select REL_ID ,ENTY_ID ,ENTY_TYPE ,ENTY_NAME ,TASK_ID");
-		queryProvider.setFromClause("from nmk2.nmk_search_task_ent");
-		queryProvider.setWhereClause("where task_id = :task_id");
+		queryProvider.setSelectClause("select ent.*,task.TASK_TYPE");
+		queryProvider.setFromClause("from NMK2.NMK_SEARCH_TASK_ENT ent,NMK2.NMK_SEARCH_TASK task");
+		queryProvider.setWhereClause("where ent.TASK_ID = task.TASK_ID and task.TASK_ID = :task_id");
 		queryProvider.setSortKey("enty_id");
 		reader.setQueryProvider(queryProvider.getObject());
 		
@@ -136,6 +136,7 @@ public class SearchBatchConfig {
 		jobRepositoryFactoryBean.setTransactionManager(transactionManager);
 		jobRepositoryFactoryBean.setDatabaseType(DatabaseType.ORACLE.getProductName());
 		jobRepositoryFactoryBean.setIsolationLevelForCreate("ISOLATION_READ_COMMITTED");
+		jobRepositoryFactoryBean.setMaxVarCharLength(3000);
 		return jobRepositoryFactoryBean.getObject();
 	}
 

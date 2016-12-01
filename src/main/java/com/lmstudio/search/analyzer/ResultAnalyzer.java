@@ -10,8 +10,7 @@
 */
 package com.lmstudio.search.analyzer;
 
-import java.util.List;
-
+import com.lmstudio.search.model.SearchTaskEnt;
 import com.lmstudio.search.model.SearchTaskResult;
 
 /**
@@ -21,5 +20,12 @@ import com.lmstudio.search.model.SearchTaskResult;
 */
 public interface ResultAnalyzer {
 
-	List<SearchTaskResult> analyzer(String html);
+	/**
+	* TODO 主体搜索
+	* @Title: analyzer
+	* @param html
+	* @param item
+	* @return
+	 */
+	SearchTaskResult analyzer(String html, SearchTaskEnt item);
 }

@@ -20,6 +20,13 @@ public class SearchTaskEnt implements Serializable {
 	private String entyType;
 
 	private String taskId;
+	
+	private String website;
+	
+	/**
+	 * 对应数据库不存此字段
+	 */
+	private String taskType;
 
 	public SearchTaskEnt() {
 	}
@@ -63,5 +70,23 @@ public class SearchTaskEnt implements Serializable {
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+
+	public String getWebsite() {
+		return website;
+	}
+
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+
+	public String getTaskType() {
+		return taskType;
+	}
+
+	public void setTaskType(String taskType) {
+		this.taskType = taskType;
+	}
+	
+	
 
 }

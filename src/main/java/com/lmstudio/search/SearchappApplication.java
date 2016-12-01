@@ -5,7 +5,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import com.lmstudio.search.batch.SearchSettings;
-
+/**
+ * SpringBoot默认会扫描启动类同包以及子包下的注解
+* TODO
+* @ClassName: SearchappApplication
+* @author jason
+ */
 @SpringBootApplication
 @EnableConfigurationProperties({SearchSettings.class})
 public class SearchappApplication {
