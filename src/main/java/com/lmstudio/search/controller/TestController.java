@@ -21,8 +21,10 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -42,23 +44,27 @@ public class TestController {
 	JobLauncher jobLauncher;
 
 	@Autowired
-	Job searchJob;
+	@Qualifier("entJob")
+	Job entJob;
+	
+	@Autowired
+	@Qualifier("netJob")
+	Job netJob;
 	
 	/**
 	 * 必须申明成public 的，才能被访问到
 	 */
 	public JobParameters jobParameters;
 
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	@RequestMapping(value = "/search/{jobId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String search() {
+	public String search(@PathVariable(name="jobId") String jobId) {
 
-		String jobId = "100";
 		jobParameters = new JobParametersBuilder().addString("taskId", jobId)
 				.addLong("time", System.currentTimeMillis()).toJobParameters();
 		String msg = null;
 		try {
-			JobExecution jobExecute = jobLauncher.run(searchJob, jobParameters);
+			JobExecution jobExecute = jobLauncher.run(netJob, jobParameters);
 			/**
 			 * A job instance already exists and is complete for
 			 * parameters={taskId=100}. If you want to run this job again,

@@ -3,6 +3,7 @@ package com.lmstudio.search;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.lmstudio.search.batch.SearchSettings;
 /**
@@ -13,6 +14,7 @@ import com.lmstudio.search.batch.SearchSettings;
  */
 @SpringBootApplication
 @EnableConfigurationProperties({SearchSettings.class})
+@EnableScheduling
 public class SearchappApplication {
 
 	public static void main(String[] args) {

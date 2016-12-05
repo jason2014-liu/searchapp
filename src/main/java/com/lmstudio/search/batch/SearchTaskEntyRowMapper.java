@@ -24,7 +24,7 @@ import com.lmstudio.search.model.SearchTaskEnt;
 */
 public class SearchTaskEntyRowMapper implements RowMapper<SearchTaskEnt> {
 
-	final static String COL_RELID = "REL_ID";
+	final static String COL_PRIID = "PRI_ID";
 	final static String COL_ENTYID = "ENTY_ID";
 	final static String COL_ENTYTYPE = "ENTY_TYPE";
 	final static String COL_ENTYNAME = "ENTY_NAME";
@@ -34,7 +34,7 @@ public class SearchTaskEntyRowMapper implements RowMapper<SearchTaskEnt> {
 	public SearchTaskEnt mapRow(ResultSet rs, int arg1) throws SQLException {
 		// TODO Auto-generated method stub
 		SearchTaskEnt searchTaskEnt = new SearchTaskEnt();
-		searchTaskEnt.setRelId(rs.getString(COL_RELID));
+		searchTaskEnt.setPriId(rs.getString(COL_PRIID));
 		searchTaskEnt.setEntyId(rs.getString(COL_ENTYID));
 		searchTaskEnt.setEntyName(rs.getString(COL_ENTYNAME));
 		searchTaskEnt.setEntyType(rs.getString(COL_ENTYTYPE));

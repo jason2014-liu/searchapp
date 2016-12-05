@@ -3,7 +3,6 @@ package com.lmstudio.search.model;
 import java.io.Serializable;
 import javax.persistence.*;
 
-
 /**
  * The persistent class for the NMK_SEARCH_TASK_ENT database table.
  * 
@@ -11,7 +10,7 @@ import javax.persistence.*;
 public class SearchTaskEnt implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String relId;
+	private String priId;
 
 	private String entyId;
 
@@ -20,9 +19,9 @@ public class SearchTaskEnt implements Serializable {
 	private String entyType;
 
 	private String taskId;
-	
+
 	private String website;
-	
+
 	/**
 	 * 对应数据库不存此字段
 	 */
@@ -31,12 +30,12 @@ public class SearchTaskEnt implements Serializable {
 	public SearchTaskEnt() {
 	}
 
-	public String getRelId() {
-		return this.relId;
+	public String getPriId() {
+		return priId;
 	}
 
-	public void setRelId(String relId) {
-		this.relId = relId;
+	public void setPriId(String priId) {
+		this.priId = priId;
 	}
 
 	public String getEntyId() {
@@ -86,7 +85,5 @@ public class SearchTaskEnt implements Serializable {
 	public void setTaskType(String taskType) {
 		this.taskType = taskType;
 	}
-	
-	
 
 }

@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -76,5 +77,14 @@ public class SearchUtils {
 		}
 
 		return val;
+	}
+	
+	/**
+	* TODO
+	* @Title: getPrimaryIdByUUID
+	* @return
+	 */
+	public static String getPrimaryIdByUUID(){
+		return UUID.randomUUID().toString().replaceAll("-", "");
 	}
 }

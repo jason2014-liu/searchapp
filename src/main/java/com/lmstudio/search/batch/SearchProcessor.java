@@ -51,7 +51,7 @@ public class SearchProcessor implements ItemProcessor<SearchTaskEnt, SearchTaskR
 		if (searchSettins.getEngine().equals(SearchEngine.BAIDU.getEngineName())) {
 
 			String html = searchService.search(url, SearchEngine.BAIDU);
-			resultAnalyzer.analyzer(html, item);
+			result = resultAnalyzer.analyzer(html, item);
 		}
 
 		return result;

@@ -30,6 +30,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
+import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.support.DatabaseType;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import com.lmstudio.search.model.NmkSearchResult;
+import com.lmstudio.search.model.NmkTaskNetCheck;
 import com.lmstudio.search.model.SearchTaskEnt;
 import com.lmstudio.search.model.SearchTaskResult;
 
@@ -60,10 +63,12 @@ public class SearchBatchConfig {
 		SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
 		queryProvider.setDatabaseType(DatabaseType.ORACLE.getProductName());
 		queryProvider.setDataSource(dataSource);
-		queryProvider.setSelectClause("select ent.*,task.TASK_TYPE");
-		queryProvider.setFromClause("from NMK2.NMK_SEARCH_TASK_ENT ent,NMK2.NMK_SEARCH_TASK task");
-		queryProvider.setWhereClause("where ent.TASK_ID = task.TASK_ID and task.TASK_ID = :task_id");
-		queryProvider.setSortKey("enty_id");
+		queryProvider.setSelectClause("SELECT PRI_ID,ENTY_ID,ENTY_TYPE,ENTY_NAME,TASK_ID");
+		queryProvider.setFromClause("FROM "+SearchConstants.SCHEMA+"NMK_SEARCH_TASK_ENT");
+		queryProvider.setWhereClause("WHERE TASK_ID = :task_id");
+		Map<String,Order> sortKeys = new HashMap<String, Order>();
+		sortKeys.put("PRI_ID", Order.ASCENDING);
+		queryProvider.setSortKeys(sortKeys);
 		reader.setQueryProvider(queryProvider.getObject());
 		
 		reader.setPageSize(1);
@@ -105,21 +110,28 @@ public class SearchBatchConfig {
 //		
 //	}
 	
+	/**
+	* TODO 主体搜索任务
+	* @Title: entJob
+	* @param jobs
+	* @param entStep
+	* @return
+	 */
 	@Bean
-	public Job searchJob(JobBuilderFactory jobs, Step step1) {
-		return jobs.get("searchJob")
+	public Job entJob(JobBuilderFactory jobs, Step entStep) {
+		return jobs.get("entJob")
 				.incrementer(new RunIdIncrementer())
-				.flow(step1) //1
+				.flow(entStep) //1
 				.end()
 				.listener(searchJobListener()) //2
 				.build();
 	}
 
 	@Bean
-	public Step step1(StepBuilderFactory stepBuilderFactory, ItemReader<SearchTaskEnt> reader, ItemWriter<SearchTaskResult> writer,
+	public Step entStep(StepBuilderFactory stepBuilderFactory, ItemReader<SearchTaskEnt> reader, ItemWriter<SearchTaskResult> writer,
 			ItemProcessor<SearchTaskEnt,SearchTaskResult> processor) {
 		return stepBuilderFactory
-				.get("step1")
+				.get("entStep")
 				.<SearchTaskEnt, SearchTaskResult>chunk(65000) //1
 				.reader(reader) //2
 				.processor(processor) //3
@@ -127,7 +139,87 @@ public class SearchBatchConfig {
 				.build();
 	}
 	
+	@Bean
+	@StepScope
+	public JdbcPagingItemReader<NmkTaskNetCheck> netReader(@Value("#{jobParameters['taskId']}")  String taskId, DataSource dataSource) throws Exception{
+		JdbcPagingItemReader<NmkTaskNetCheck> reader = new JdbcPagingItemReader<NmkTaskNetCheck>();
+		
+		reader.setDataSource(dataSource);
+		
+		SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
+		queryProvider.setDatabaseType(DatabaseType.ORACLE.getProductName());
+		queryProvider.setDataSource(dataSource);
+		queryProvider.setSelectClause("select net.LIST_ID,net.TASK_ID,net.NET_ID,net.DOMAIN,task.INCLUDE_ALL,task.INCLUDE_ANY,task.NOT_INCLUDE");
+		queryProvider.setFromClause("from "+SearchConstants.SCHEMA+"nmk_check_task task ,"+SearchConstants.SCHEMA+"nmk_task_net_check net");
+		queryProvider.setWhereClause("where task.LIST_ID = net.TASK_ID and task.LIST_ID = :task_Id");
+		Map<String,Order> sortKeys = new HashMap<String, Order>();
+		sortKeys.put("task.list_id", Order.ASCENDING);
+		queryProvider.setSortKeys(sortKeys);
+		reader.setQueryProvider(queryProvider.getObject());
+		
+		reader.setPageSize(1);
+		
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put("task_id", taskId);
+		reader.setParameterValues(params);
 
+		NmkTaskNetRowMapper rowMapper = new NmkTaskNetRowMapper();
+		reader.setRowMapper(rowMapper);
+		
+		return reader;
+	}
+	
+	@Bean
+	public ItemProcessor<NmkTaskNetCheck, NmkSearchResult> netProcessor(){
+		return new NmkTaskNetProcessor();
+	}
+	
+	@Bean
+	public ItemWriter<NmkSearchResult> netWriter(DataSource dataSource){
+		NmkTaskNetWriter writer = new NmkTaskNetWriter();
+		writer.setDataSource(dataSource);
+		return writer;
+	}
+	
+	/**
+	* TODO 专项高级搜索任务
+	* @Title: netJob
+	* @param jobs
+	* @param step1
+	* @return
+	 */
+	@Bean
+	public Job netJob(JobBuilderFactory jobs, Step netStep) {
+		return jobs.get("netJob")
+				.incrementer(new RunIdIncrementer())
+				.flow(netStep) //1
+				.end()
+				.listener(searchJobListener()) //2
+				.build();
+	}
+
+	@Bean
+	public Step netStep(StepBuilderFactory stepBuilderFactory, ItemReader<NmkTaskNetCheck> reader, ItemWriter<NmkSearchResult> writer,
+			ItemProcessor<NmkTaskNetCheck,NmkSearchResult> processor) {
+		return stepBuilderFactory
+				.get("netStep")
+				.<NmkTaskNetCheck, NmkSearchResult>chunk(65000) //1
+				.reader(reader) //2
+				.processor(processor) //3
+				.writer(writer) //4
+				.build();
+	}
+	
+
+	
+	/**
+	* TODO 任务库
+	* @Title: jobRepository
+	* @param dataSource
+	* @param transactionManager
+	* @return
+	* @throws Exception
+	 */
 	@Bean
 	public JobRepository jobRepository(DataSource dataSource, PlatformTransactionManager transactionManager)
 			throws Exception {

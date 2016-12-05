@@ -18,4 +18,5 @@ package com.lmstudio.search.analyzer;
 public interface SearchService {
 
 	String search(String url, SearchEngine se)throws Exception;
+	
 }

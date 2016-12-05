@@ -1,10 +1,10 @@
 /**
 * TODO
 * @Project: searchapp
-* @Title: SearchWriter.java
+* @Title: NmkTaskNetWriter.java
 * @Package com.lmstudio.search.batch
 * @author jason
-* @Date 2016年11月22日 下午5:22:48
+* @Date 2016年12月2日 下午4:50:28
 * @Copyright
 * @Version 
 */
@@ -19,37 +19,36 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 
-import com.lmstudio.search.model.SearchTaskEntResult;
-import com.lmstudio.search.model.SearchTaskResult;
+import com.lmstudio.search.model.NmkSearchNetResult;
+import com.lmstudio.search.model.NmkSearchResult;
 
 /**
  * TODO
  * 
- * @ClassName: SearchWriter
+ * @ClassName: NmkTaskNetWriter
  * @author jason
  */
-public class SearchWriter implements ItemWriter<SearchTaskResult> {
+public class NmkTaskNetWriter implements ItemWriter<NmkSearchResult> {
 
 	private DataSource dataSource;
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	static final String opeSQL = "insert into  "+SearchConstants.SCHEMA+"nmk_search_task_result (ID,REL_ID,ENTY_NAME,WEBSITE,KEYWORD) values(:id,:relId,:entyName,:website,:keyword)";
+	static final String opeSQL = "insert into  "+SearchConstants.SCHEMA+"nmk_search_net_result(id,task_id,net_id,domain,result_title,result_url,result_summary,result_keyword,list_id) value(:id,:taskId,:netId,:domain,:resultTitle,:resultUrl,:resultSummary,:resultKeyword,:listId)";
 
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
 	}
 
-	public int[] batchUpdate(List<SearchTaskEntResult> entResults) {
+	public int[] batchUpdate(List<NmkSearchNetResult> entResults) {
 		SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(entResults.toArray());
-		int[] insertCounts = namedParameterJdbcTemplate
-				.batchUpdate(opeSQL, batch);
+		int[] insertCounts = namedParameterJdbcTemplate.batchUpdate(opeSQL, batch);
 		return insertCounts;
 	}
 
 	@Override
-	public void write(List<? extends SearchTaskResult> items) throws Exception {
+	public void write(List<? extends NmkSearchResult> items) throws Exception {
 		// TODO Auto-generated method stub
-		for (SearchTaskResult result : items) {
+		for (NmkSearchResult result : items) {
 			if (result.getList() != null) {
 				batchUpdate(result.getList());
 			}

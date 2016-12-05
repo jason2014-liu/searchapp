@@ -21,6 +21,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,7 +37,8 @@ public class SearchJobService {
 	private JobLauncher jobLauncher;
 
 	@Autowired
-	private Job searchJob;
+	@Qualifier("entJob")
+	private Job entJob;
 	
 	public JobParameters jobParameters;
 
@@ -47,7 +49,7 @@ public class SearchJobService {
 
 		String msg = null;
 		try {
-			JobExecution jobExecute = jobLauncher.run(searchJob, jobParameters);
+			JobExecution jobExecute = jobLauncher.run(entJob, jobParameters);
 			ExitStatus status = jobExecute.getExitStatus();
 			if (status.getExitCode().equals(ExitStatus.COMPLETED.getExitCode())) {
 				System.out.println("任务正常完成");
