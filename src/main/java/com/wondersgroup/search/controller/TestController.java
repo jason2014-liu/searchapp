@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.wondersgroup.search.batch.TaskScheduler;
+
 /**
  * TODO http://localhost:9999/searchapp/test/search
  * 
@@ -50,6 +52,9 @@ public class TestController {
 	@Autowired
 	@Qualifier("netJob")
 	Job netJob;
+	
+	@Autowired
+	TaskScheduler scheduler;
 	
 	/**
 	 * 必须申明成public 的，才能被访问到
@@ -86,5 +91,11 @@ public class TestController {
 			msg = e.getMessage();
 		}
 		return msg;
+	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	@ResponseBody
+	public void test(){
+		scheduler.scheduleTask();
 	}
 }

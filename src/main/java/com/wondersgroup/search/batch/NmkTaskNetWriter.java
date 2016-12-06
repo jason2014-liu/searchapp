@@ -52,7 +52,6 @@ public class NmkTaskNetWriter implements ItemWriter<NmkSearchResult> {
 			if (result.getList() != null) {
 				batchUpdate(result.getList());
 			}
-
 		}
 	}
 

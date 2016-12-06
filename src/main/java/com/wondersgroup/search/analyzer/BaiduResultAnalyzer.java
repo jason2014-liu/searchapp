@@ -82,6 +82,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 				} catch (IOException ex) {
 					// TODO Auto-generated catch block
 					// ex.printStackTrace();
+					log.error("主体搜索任务>>地址"+url+"访问异常："+ex.getMessage());
 					url = null;
 				}
 
@@ -98,7 +99,9 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 
 					result.addEntResult(entResult);
 
-					log.debug("主体("+item.getEntyName()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
+					if(log.isDebugEnabled()){
+						log.debug("主体("+item.getEntyName()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
+					}
 				}
 
 			}
@@ -162,6 +165,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 				}  catch (IOException ex) {
 					// TODO Auto-generated catch block
 					// ex.printStackTrace();
+					log.error("专项搜索任务>>地址"+url+"访问异常："+ex.getMessage());
 					url = null;
 				}
 
@@ -220,6 +224,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 				} catch (IOException ex) {
 					// TODO Auto-generated catch block
 					// ex.printStackTrace();
+					log.error("专项搜索任务>>地址"+url+"访问异常："+ex.getMessage());
 					url = null;
 				}
 
@@ -246,7 +251,9 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 					
 					result.addEntResult(netResult);
 
-					log.debug("专项任务("+item.getDomain()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
+					if(log.isDebugEnabled()){
+						log.debug("专项任务("+item.getDomain()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
+					}
 				}
 
 			}
