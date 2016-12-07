@@ -11,7 +11,6 @@ import com.wondersgroup.search.batch.SearchSettings;
 
 @SpringBootApplication
 @EnableConfigurationProperties({SearchSettings.class})
-@EnableScheduling
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	@Override

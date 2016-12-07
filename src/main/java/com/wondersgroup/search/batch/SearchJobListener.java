@@ -38,9 +38,7 @@ public class SearchJobListener implements JobExecutionListener {
 		String taskId = jobParameters.getString("taskId");
 		long costTime = jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime();
 
-		
-		
-		if (BatchStatus.COMPLETED == jobExecution.getStatus() && ExitStatus.COMPLETED == jobExecution.getExitStatus()) {
+		if (BatchStatus.COMPLETED == jobExecution.getStatus()) {
 			log.info("任务ID=" + taskId + "执行完毕，花费时间：" + costTime + "ms");
 		}
 		

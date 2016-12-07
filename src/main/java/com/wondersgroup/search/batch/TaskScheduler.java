@@ -30,9 +30,11 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +45,8 @@ import org.springframework.stereotype.Component;
  * @author jason
  */
 @Component
+@Configurable
+@EnableScheduling
 public class TaskScheduler {
 
 	private static Logger log = LoggerFactory.getLogger(TaskScheduler.class);
@@ -115,7 +119,8 @@ public class TaskScheduler {
 	 */
 	public void excuteTask(String taskId, String taskType) {
 
-		JobParameters jobParameters = new JobParametersBuilder().addString("taskId", taskId).toJobParameters();
+		//.addLong("time", System.currentTimeMillis()). for test
+		JobParameters jobParameters = new JobParametersBuilder().addString("taskId", taskId).addLong("time", System.currentTimeMillis()).toJobParameters();
 		JobExecution jobExecute = null;
 		try {
 			if(SearchConstants.TASK_TYPE_ENT.equals(taskType)){
@@ -132,7 +137,7 @@ public class TaskScheduler {
 		}
 		ExitStatus status = jobExecute.getExitStatus();
 		Map<String,Object> params = null;
-		if (status.getExitCode().equals(ExitStatus.COMPLETED.getExitCode())) {
+		if (ExitStatus.COMPLETED.getExitCode().equals(status.getExitCode())) {
 			log.info("搜索任务 taskId=" + taskId + "执行成功。"+status.getExitCode()+status.getExitDescription());
 			params = new HashMap<String,Object>();
 			params.put("taskId", taskId);
