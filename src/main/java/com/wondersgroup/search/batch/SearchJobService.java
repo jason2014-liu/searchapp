@@ -59,8 +59,7 @@ public class SearchJobService {
 				msg = "任务失败，exitCode=" + status.getExitCode();
 			}
 
-		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				| JobParametersInvalidException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			msg = e.getMessage();

@@ -9,10 +9,10 @@
 	</appender>
 
 <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>mylog.log</file>
+    <file>/home/weblogic/applogs/searchapp.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
       <!-- rollover daily -->
-      <fileNamePattern>mylog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>searchapp-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
        <!-- each file should be at most 100MB, keep 60 days worth of history, but at most 20GB -->
        <maxFileSize>100MB</maxFileSize>    
        <maxHistory>60</maxHistory>
@@ -38,6 +38,10 @@
 	</logger>
 	<logger name="org.springframework.batch" level="INFO" >
 		<appender-ref ref="STDOUT"/>
+	</logger>
+	
+	<logger name="org.springframework.scheduling">
+   		 <level value="info" />
 	</logger>
 	 
 </configuration>

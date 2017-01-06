@@ -5,13 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.WebApplicationInitializer;
 
 import com.wondersgroup.search.batch.SearchSettings;
 
 @SpringBootApplication
 @EnableConfigurationProperties({SearchSettings.class})
-public class ServletInitializer extends SpringBootServletInitializer {
+public class ServletInitializer extends SpringBootServletInitializer implements WebApplicationInitializer {
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {

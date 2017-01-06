@@ -84,8 +84,7 @@ public class TestController {
 				msg = "任务失败，exitCode=" + status.getExitCode();
 			}
 
-		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				| JobParametersInvalidException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			msg = e.getMessage();
@@ -93,7 +92,7 @@ public class TestController {
 		return msg;
 	}
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	@RequestMapping(value = "/search/all", method = RequestMethod.GET)
 	@ResponseBody
 	public void test(){
 		scheduler.scheduleTask();

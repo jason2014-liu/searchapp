@@ -23,6 +23,7 @@ public class SearchSettings {
 	private String engine;
 	private String baiduUrl;
 	private int resultCount;
+	private String mainHost;
 	
 	public String getEngine() {
 		return engine;
@@ -41,6 +42,12 @@ public class SearchSettings {
 	}
 	public void setResultCount(int resultCount) {
 		this.resultCount = resultCount;
+	}
+	public String getMainHost() {
+		return mainHost;
+	}
+	public void setMainHost(String mainHost) {
+		this.mainHost = mainHost;
 	}
 	
 	

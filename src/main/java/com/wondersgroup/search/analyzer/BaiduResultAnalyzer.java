@@ -195,9 +195,18 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 		NmkSearchResult result = new NmkSearchResult();
 
 		Document doc = Jsoup.parse(html);
+//		Elements nonelements = doc.select("div#content_none");
+//		if(nonelements != null){
+//			log.info("搜索网站"+item.getDomain()+"结果为空");
+//			return null;
+//		}
+		
 		Elements elements = doc.select("div#content_left");
 		if (elements != null) {
 			elements = elements.first().children();
+		}else{
+			log.info("搜索网站"+item.getDomain()+"结果为空");
+			return null;
 		}
 		NmkSearchNetResult netResult = null;
 		for (Element element : elements) {

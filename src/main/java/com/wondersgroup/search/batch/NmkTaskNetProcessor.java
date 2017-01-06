@@ -75,7 +75,7 @@ public class NmkTaskNetProcessor implements ItemProcessor<NmkTaskNetCheck, NmkSe
 	public String formatKeyWord(NmkTaskNetCheck item) throws IOException {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("site:(").append(StringUtils.trimWhitespace(item.getDomain())).append(")");
+		builder.append("site:(").append(StringUtils.trimWhitespace(item.getDomain()).replaceAll("http://", "").replaceAll("https://", "")).append(")");
 
 		String includeAll = item.getIncludeAll();
 		String includeAny = item.getIncludeAny();
@@ -86,22 +86,32 @@ public class NmkTaskNetProcessor implements ItemProcessor<NmkTaskNetCheck, NmkSe
 		List<String> list = null;
 		StringBuilder sb = null;
 		String tempStr = null;
+		String[] strArray = null;
 
 		if (!StringUtils.isEmpty(includeAll)) {
-			list = objectMapper.readValue(includeAll, List.class);
-			for (String str : list) {
+//			list = objectMapper.readValue(includeAll, List.class);
+//			for (String str : list) {
+//				builder.append(" ").append(str);
+//			}
+			strArray = includeAll.split(",");
+			for(String str : strArray){
 				builder.append(" ").append(str);
 			}
+			
 
 		}
 
 		if (!StringUtils.isEmpty(includeAny)) {
-			list = objectMapper.readValue(includeAny, List.class);
+			//list = objectMapper.readValue(includeAny, List.class);
+			strArray = includeAny.split(",");
 			builder.append(" (");
 			sb = new StringBuilder();
-			for (String str : list) {
+			for(String str : strArray){
 				sb.append(str).append(" | ");
 			}
+//			for (String str : list) {
+//				sb.append(str).append(" | ");
+//			}
 
 			tempStr = sb.toString();
 			builder.append(tempStr.substring(0, tempStr.lastIndexOf(" | "))).append(")");
@@ -109,12 +119,16 @@ public class NmkTaskNetProcessor implements ItemProcessor<NmkTaskNetCheck, NmkSe
 		}
 
 		if (!StringUtils.isEmpty(notInclude)) {
-			list = objectMapper.readValue(notInclude, List.class);
+			//list = objectMapper.readValue(notInclude, List.class);
+			strArray = notInclude.split(",");
 			builder.append(" -(");
 			sb = new StringBuilder();
-			for (String str : list) {
+			for(String str : strArray){
 				sb.append(str).append(" | ");
 			}
+//			for (String str : list) {
+//				sb.append(str).append(" | ");
+//			}
 
 			tempStr = sb.toString();
 			builder.append(tempStr.substring(0, tempStr.lastIndexOf(" | "))).append(")");

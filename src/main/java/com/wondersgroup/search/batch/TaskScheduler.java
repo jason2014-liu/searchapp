@@ -10,6 +10,8 @@
 */
 package com.wondersgroup.search.batch;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -58,6 +60,10 @@ public class TaskScheduler {
 			+ " and TASK_STATUS = " + SearchConstants.TASK_STAUS_NEW + " order by CREATE_DATE asc, ORDER_NUM asc";
 
 	final String updateSql = "update  "+SearchConstants.SCHEMA+"NMK_SEARCH_QUEUE set TASK_STATUS = "+SearchConstants.TASK_STATUS_COMPLETED+" ,complete_date = sysdate where task_id = :taskId";
+	
+	final String deleteNetSql = "delete from "+SearchConstants.SCHEMA+"NMK_SEARCH_NET_RESULT";
+	final String deleteEntSql = "delete from "+SearchConstants.SCHEMA+"NMK_SEARCH_TASK_RESULT";
+	
 	private DataSource dataSource;
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -72,6 +78,9 @@ public class TaskScheduler {
 	@Autowired
 	@Qualifier("netJob")
 	private Job netJob;
+	
+	@Autowired
+	private SearchSettings searchSettins;
 
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
@@ -86,6 +95,29 @@ public class TaskScheduler {
 	 */
 	@Scheduled(cron = "0 0 23 * * ? ")
 	public void scheduleTask() {
+		String hostIp = null;
+		try {
+			hostIp = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			log.error(e.getMessage());
+			e.printStackTrace();
+		}
+		
+		if(hostIp !=null){
+			log.info("hostIp:"+hostIp);
+			if(!searchSettins.getMainHost().equals(hostIp)){
+				return;
+			}
+		}
+		
+		//清空搜索结果表
+		int delEntCount = namedParameterJdbcTemplate.update(deleteEntSql, new HashMap<String,Object>());
+		
+		int delNetCount = namedParameterJdbcTemplate.update(deleteNetSql, new HashMap<String,Object>());
+		
+		log.info("清空搜索结果表,NMK_SEARCH_NET_RESULT:"+delNetCount+" NMK_SEARCH_TASK_RESULT:"+delEntCount);
+		
 		// 专项任务
 
 		namedParameterJdbcTemplate.query(netSql, new RowCallbackHandler() {
@@ -129,8 +161,7 @@ public class TaskScheduler {
 				jobExecute = jobLauncher.run(netJob, jobParameters);
 			}
 			
-		} catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException
-				| JobParametersInvalidException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			log.info("搜索任务 taskId=" + taskId + "执行失败。异常信息："+e.getMessage());
