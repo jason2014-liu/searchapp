@@ -95,21 +95,21 @@ public class TaskScheduler {
 	 */
 	@Scheduled(cron = "0 0 23 * * ? ")
 	public void scheduleTask() {
-		String hostIp = null;
-		try {
-			hostIp = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			log.error(e.getMessage());
-			e.printStackTrace();
-		}
-		
-		if(hostIp !=null){
-			log.info("hostIp:"+hostIp);
-			if(!searchSettins.getMainHost().equals(hostIp)){
-				return;
-			}
-		}
+//		String hostIp = null;
+//		try {
+//			hostIp = InetAddress.getLocalHost().getHostAddress();
+//		} catch (UnknownHostException e) {
+//			// TODO Auto-generated catch block
+//			log.error(e.getMessage());
+//			e.printStackTrace();
+//		}
+//		
+//		if(hostIp !=null){
+//			log.info("hostIp:"+hostIp);
+//			if(!searchSettins.getMainHost().equals(hostIp)){
+//				return;
+//			}
+//		}
 		
 		//清空搜索结果表
 		int delEntCount = namedParameterJdbcTemplate.update(deleteEntSql, new HashMap<String,Object>());
@@ -152,7 +152,7 @@ public class TaskScheduler {
 	public void excuteTask(String taskId, String taskType) {
 
 		//.addLong("time", System.currentTimeMillis()). for test
-		JobParameters jobParameters = new JobParametersBuilder().addString("taskId", taskId).addLong("time", System.currentTimeMillis()).toJobParameters();
+		JobParameters jobParameters = new JobParametersBuilder().addString("taskId", taskId).toJobParameters();
 		JobExecution jobExecute = null;
 		try {
 			if(SearchConstants.TASK_TYPE_ENT.equals(taskType)){

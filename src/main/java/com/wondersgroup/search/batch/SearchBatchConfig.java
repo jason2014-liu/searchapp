@@ -71,7 +71,7 @@ public class SearchBatchConfig {
 		queryProvider.setSortKeys(sortKeys);
 		reader.setQueryProvider(queryProvider.getObject());
 		
-		reader.setPageSize(1);
+		reader.setPageSize(500);
 		
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("task_id", taskId);
@@ -132,7 +132,7 @@ public class SearchBatchConfig {
 			ItemProcessor<SearchTaskEnt,SearchTaskResult> processor) {
 		return stepBuilderFactory
 				.get("entStep")
-				.<SearchTaskEnt, SearchTaskResult>chunk(65000) //1
+				.<SearchTaskEnt, SearchTaskResult>chunk(10) //1
 				.reader(reader) //2
 				.processor(processor) //3
 				.writer(writer) //4
@@ -157,7 +157,7 @@ public class SearchBatchConfig {
 		queryProvider.setSortKeys(sortKeys);
 		reader.setQueryProvider(queryProvider.getObject());
 		
-		reader.setPageSize(1);
+		reader.setPageSize(500);
 		
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put("task_id", taskId);
@@ -203,7 +203,7 @@ public class SearchBatchConfig {
 			ItemProcessor<NmkTaskNetCheck,NmkSearchResult> processor) {
 		return stepBuilderFactory
 				.get("netStep")
-				.<NmkTaskNetCheck, NmkSearchResult>chunk(65000) //1
+				.<NmkTaskNetCheck, NmkSearchResult>chunk(10) //1
 				.reader(reader) //2
 				.processor(processor) //3
 				.writer(writer) //4

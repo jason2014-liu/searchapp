@@ -49,9 +49,13 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 		SearchTaskResult result = new SearchTaskResult();
 
 		Document doc = Jsoup.parse(html);
+		log.info(html);
 		Elements elements = doc.select("div#content_left");
-		if (elements != null) {
+		if (elements != null && elements.first()!=null) {
 			elements = elements.first().children();
+		}else{
+			log.info("搜索主体"+item.getEntyName()+"结果为空");
+			return null;
 		}
 
 		SearchTaskEntResult entResult = null;
@@ -71,7 +75,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 				try {
 					URL url2 = new URL(url);
 					HttpURLConnection httpConn = (HttpURLConnection) url2.openConnection();
-					httpConn.setConnectTimeout(3000);
+					httpConn.setConnectTimeout(30000);
 					httpConn.connect();
 					int responseCode = httpConn.getResponseCode();
 					if (responseCode == 200 || responseCode == 403) {
@@ -99,9 +103,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 
 					result.addEntResult(entResult);
 
-					if(log.isDebugEnabled()){
-						log.debug("主体("+item.getEntyName()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
-					}
+					log.info("主体("+item.getEntyName()+")搜索结果：title:" + title + " url:" + url + " summary:" + summary + "\n");
 				}
 
 			}
@@ -223,7 +225,7 @@ public class BaiduResultAnalyzer implements ResultAnalyzer {
 				try {
 					URL url2 = new URL(url);
 					HttpURLConnection httpConn = (HttpURLConnection) url2.openConnection();
-					httpConn.setConnectTimeout(3000);
+					httpConn.setConnectTimeout(30000);
 					httpConn.connect();
 					int responseCode = httpConn.getResponseCode();
 					if (responseCode == 200 || responseCode == 403) {
